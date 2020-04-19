@@ -39,15 +39,15 @@ Surfaces.prototype.bublik = ( R = 20,  count = 10) => {
     for (let i = 0; i < count - 1; i ++) {
         j ++;
         if (i % 2 == 0){
-            polygons.push(new Polygon([i, i + 1, j + 1, j], 'pink'));
+            polygons.push(new Polygon([i, i + 1, j + 1, j], '#ffc0cb'));//pink
         }else{
-            polygons.push(new Polygon([i, i + 1, j + 1, j], 'yellow'));
+            polygons.push(new Polygon([i, i + 1, j + 1, j], '#ffff00'));//yellow
         }
     }
     if (i % 2 == 0){
-        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], 'pink'))
+        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], '#ffc0cb'))//pink
     }else{
-        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], 'yellow'))
+        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], '#ffff00'))//yellow
     }
     return new Subject(points, edges, polygons);
 }
