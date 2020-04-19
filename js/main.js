@@ -15,29 +15,21 @@ window.onload = function() {
         BOTTOM : -10, 
         WIDTH : 20,
         HEIGHT : 20,
-        CENTER : new Point(0, 0, -90),
-        CAMERA : new Point(0, 0, -100)
+        CENTER : new Point(0, 0, -30),
+        CAMERA : new Point(0, 0, -50)
     };
 
     const ZOOM_OUT = 1.1;
     const ZOOM_IN = 0.9;
     let canMove = false;
-    let canPrint =  {
-        points : false,
-        edges : false,
-        polygons : true
-    }
 
     const sur = new Surfaces;
-    const canvas = new Canvas({id: 'canvas', width: 600, height: 600, WINDOW, 
-                               callbacks : {wheel, mousedown, mousemove, mouseup} }); 
+    const canvas = new Canvas({width: 600, height: 600, WINDOW, 
+                               callbacks : {wheel, mousedown, mousemove, mouseup, keydown} }); 
     const graph3D = new Graph3D({WINDOW});
-    const ui = new UI({callbacks : {move, printPoints, printEdges, printPolygons}});
 
-    const LIGHT = new Light(-20, 2, -20, 200) //источник света
-    //const SCENE = [sur.sphere(80,40)];
+    //const SCENE = [sur.cube()];
     const SCENE = [sur.ellipsoid()];
-    //const SCENE = [sur.hyperparaboloid()];
 
     function wheel(event) {
         const delta = (event.wheelDelta > 0) ? ZOOM_IN : ZOOM_OUT;
@@ -57,48 +49,63 @@ window.onload = function() {
         let alphaY = -0.01 * event.movementY;
         SCENE.forEach(subject => subject.points.forEach(point => graph3D.rotateOx(alphaY, point)));
         SCENE.forEach(subject => subject.points.forEach(point => graph3D.rotateOy(alphaX, point)));
+        
         }
     }
 
-    function printPoints(value) {
-        canPrint.points = value;
-    }
-
-    function printEdges(value) {
-        canPrint.edges = value;
+    /*let direction = '';
+    function keydown (event) {
         
-    }
-
-    function printPolygons(value) {
-        canPrint.polygons = value;
-        
-    }
-
-    function move (direction) {
+        if(event.keyCode == 40) { // это код кнопки «Вниз»
+            direction = 'down';
+          }
+        if(event.keyCode == 38) { // это код кнопки «Вниз»
+            direction = 'up';
+          }
+        if (event.keyCode == 39) {
+            direction = 'right';
+          } 
+        if(event.keyCode == 37) {
+            direction = 'left';
+          }
+        console.log(direction);
         if (direction === 'up' || direction === 'down') {
-            const delta = (direction === 'up') ? 1 : -1;
-            SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOy(delta, point)));
+            const delta = (direction === 'up') ? 0.1 : -0.1;
+            console.log(delta);
+            SCENE.forEach(subject => subject.points.forEach(point => {graph3D.moveOy(delta, point);
+                                                                      console.log(point)}));
         }
         if (direction === 'left' || direction === 'right') {
-            const delta = (direction === 'right') ? 1 : -1;
+            const delta = (direction === 'right') ? 0.1 : -0.1;
             SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOx(delta, point)));
+        }
+    }*/
+
+    function keydown(event){
+        if(event.keyCode == 37){
+        SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOx(-1, point)));
+        }
+        if(event.keyCode == 38){
+        SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOy(1, point)));
+        }
+        if(event.keyCode == 39){
+        SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOx(1, point)));
+        }
+        if(event.keyCode == 40){
+        SCENE.forEach(subject => subject.points.forEach(point => graph3D.moveOy(-1, point)));
         }
     }
 
-
-    //рисовка    
+    //рисовка
+    let pol = document.querySelector('#polygons');     
+    let edg = document.querySelector('#edges');     
+    let poi = document.querySelector('#points');     
     function printSubject(subject) {
-    if (canPrint.polygons) {//полигоны
-        
-        //отсечь невидимые грани
-        graph3D.calcGorner(subject, WINDOW.CAMERA);
-
-        //алгоритм художника
-        graph3D.calcDistance(subject, WINDOW.CAMERA, 'distance');// дистанция от полигона до камеры
+        //полигоны
+    if (pol.checked) {
+        graph3D.calcDistance(subject, WINDOW.CAMERA);
         subject.polygons.sort((a, b) => b.distance - a.distance);
-        graph3D.calcDistance(subject, LIGHT, 'lumen');// дистанция для освещенности
         for (let i = 0; i < subject.polygons.length; i++ ) {
-            if (subject.polygons[i].visible) {
             const polygon = subject.polygons[i];
             const point1 = {
                 x : graph3D.xs(subject.points[polygon.points[0]]), 
@@ -112,18 +119,11 @@ window.onload = function() {
             const point4 = {
                 x : graph3D.xs(subject.points[polygon.points[3]]), 
                 y : graph3D.ys(subject.points[polygon.points[3]])};
-                let {r, g, b } = polygon.color;
-                const lumen = graph3D.calcIllumination(polygon.lumen, LIGHT.lumen);
-                r = Math.round(r * lumen);
-                g = Math.round(g * lumen);
-                b = Math.round(b * lumen);
-                canvas.polygon([point1, point2, point3, point4], polygon.rgbToHex(r, g, b));
-            }
-            
-
+            canvas.polygon([point1, point2, point3, point4], polygon.color);
         }
     }
-    if (canPrint.edges) {//рисуем ребра
+        //рисуем ребра
+    if (edg.checked) {
         subject.edges.forEach( edge => {
             let point1 = subject.points[edge.p1];
             let point2 = subject.points[edge.p2];
@@ -134,16 +134,14 @@ window.onload = function() {
                         graph3D.ys(point2));
         });
     }
-    if (canPrint.points) {//рисуем точки
+    if (poi.checked) {
+        //рисуем точки
         subject.points.forEach(point => {canvas.point(graph3D.xs(point), graph3D.ys(point))
         }); 
-
     }
     }
     
     function render() {
-        //console.log('dgdr');
-
         canvas.clear();
         SCENE.forEach(subject => printSubject(subject));
         canvas.text(canvas.sx(15), canvas.sy(25), FPSout);

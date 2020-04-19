@@ -17,13 +17,13 @@ class Canvas {
         const mousemove = (callbacks.mousemove instanceof Function) ? callbacks.mousemove : function () {};
         const mousedown = (callbacks.mousedown instanceof Function) ? callbacks.mousedown : function () {};
         const mouseup = (callbacks.mouseup instanceof Function) ? callbacks.mouseup : function () {};
-        //const keydown = (callbacks.keydown instanceof Function) ? callbacks.keydown : function () {};
+        const keydown = (callbacks.keydown instanceof Function) ? callbacks.keydown : function () {};
 
         this.canvas.addEventListener('wheel', wheel);
         this.canvas.addEventListener('mousemove', mousemove);
         this.canvas.addEventListener('mousedown', mousedown); 
         this.canvas.addEventListener('mouseup', mouseup);
-        //window.addEventListener('keydown', keydown);
+        window.addEventListener('keydown', keydown);
        
         
         

@@ -33,7 +33,7 @@ Surfaces.prototype.hyperparaboloid = ( count = 8) => {
         let k = 0;
         let j = i;
         while(k < 2 * count - 1){
-            polygons.push(new Polygon([j, j + 2 * count, j + 2 * count + 1, j + 1], '#ffff00'));//yellow
+            polygons.push(new Polygon([j, j + 2 * count, j + 2 * count + 1, j + 1], 'yellow'));
             j+= 2 * count;
             k++;
         }   
