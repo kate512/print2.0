@@ -1,4 +1,4 @@
-Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 15, count = 20) => {
+Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 30, count = 20) => {
     const points = [];
     const edges = [];
     const polygons = [];
@@ -29,17 +29,16 @@ Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 15, count = 20) =>
             k++;
         }
     }
-     //polygons рисуем
-     for(let i = count; i < count * 2 - 1; i++){
-        polygons.push(new Polygon([0, 0, i + 1, i], 'yellow')); 
+    
+    //polygons рисуем
+    for (let i = 0; i < points.length; i ++) {
+    
+        if ((i + 1  + count) < points.length && ((i + 1) % count) != 0) {
+            polygons.push(new Polygon([i, i + 1, i + 1 + count, i + count], '#ffff00'));
+        } else if ((i + 1 + count) < points.length ) {
+            polygons.push(new Polygon([i, i + 1 - count, i + 1, i + count], '#ffff00'));
+            }
     }
-    polygons.push(new Polygon([0, 0, count, count + count - 1], 'yellow')); 
-     for(let j = count; j < points.length - count; j += count){
-        let k = 0;
-        for(let i = j; k < count - 1; i++){
-            polygons.push(new Polygon([i, i + count,i + count + 1, i + 1], 'yellow'));
-            k++;
-        }
-    }
+    
     return new Subject(points, edges, polygons);
 }
