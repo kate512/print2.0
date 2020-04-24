@@ -45,8 +45,11 @@ class Graph3D {
     }
 
     //расстояние от полигона до нужной точки
-    calcDistance(subject, endPoint, name) {
+    calcDistance(subject, endPoint, name, t ) {
+        
         for (let i = 0; i < subject.polygons.length; i++) {
+           // subject.polygons[i][name]=[];
+
             if (subject.polygons[i].visible) {
             const points = subject.polygons[i].points;
             let x = 0, y = 0, z = 0;
@@ -58,11 +61,11 @@ class Graph3D {
             x = x / points.length;
             y = y / points.length;
             z = z / points.length;
-            const dist = Math.sqrt( Math.pow(endPoint.x - x, 2) + 
-                                    Math.pow(endPoint.y - y, 2) + 
-                                    Math.pow(endPoint.z - z, 2)
+            let dist = Math.sqrt( Math.pow(endPoint.x - x, 2) + 
+                                  Math.pow(endPoint.y - y, 2) + 
+                                  Math.pow(endPoint.z - z, 2)
             );
-            subject.polygons[i][name] = dist;
+            subject.polygons[i][name][t] = dist;
             }
         }
     }
@@ -74,17 +77,14 @@ class Graph3D {
 
     calcGorner(subject, endPoint) {
         const perpendicular = Math.cos(Math.PI / 2);
-        //console.log(perpendicular);  
         const viewVector = this.math.calcVector(endPoint, new Point(0, 0, 0));
         for (let i = 0; i < subject.polygons.length; i ++) {
             const points = subject.polygons[i].points;
             const vector1 = this.math.calcVector(subject.points[points[0]], subject.points[points[1]]);
             const vector2 = this.math.calcVector(subject.points[points[0]], subject.points[points[2]]);
             const vector3 = this.math.vectorProd(vector1, vector2);
-        //console.log(points, vector1, vector2, vector3, viewVector);  
 
             subject.polygons[i].visible = this.math.calcGorner(viewVector, vector3) <= perpendicular;
-        //console.log(this.math.calcGorner(viewVector, vector3));  
 
         }
 
