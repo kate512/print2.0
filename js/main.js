@@ -34,7 +34,10 @@ window.onload = function() {
     const graph3D = new Graph3D({WINDOW});
     const ui = new UI({callbacks : {move, printPoints, printEdges, printPolygons}});
 
-    const LIGHT = new Light(-20, 2, -20, 200) //источник света
+    const LIGHT1 = new Light(-10, 2, -30, 100); //источник света1
+    const LIGHT2 = new Light( 15, 2, -30, 100); //источник света2
+    const LIGHTS = [ LIGHT1, LIGHT2];
+
     //const SCENE = [sur.sphere(80,40)];
     const SCENE = [sur.ellipsoid()];
     //const SCENE = [sur.hyperparaboloid()];
@@ -94,9 +97,14 @@ window.onload = function() {
         graph3D.calcGorner(subject, WINDOW.CAMERA);
 
         //алгоритм художника
-        graph3D.calcDistance(subject, WINDOW.CAMERA, 'distance');// дистанция от полигона до камеры
-        subject.polygons.sort((a, b) => b.distance - a.distance);
-        graph3D.calcDistance(subject, LIGHT, 'lumen');// дистанция для освещенности
+        let t = 0;
+        graph3D.calcDistance(subject, WINDOW.CAMERA, 'distance', t);// дистанция от полигона до камеры        
+        subject.polygons.sort((a, b) => b.distance[t] - a.distance[t]);
+        
+        LIGHTS.forEach(LIGHT => {graph3D.calcDistance(subject, LIGHT, 'lumen', t);
+                                 t++; })// дистанция для освещенности
+        //graph3D.calcDistance(subject, LIGHT, 'lumen');
+
         for (let i = 0; i < subject.polygons.length; i++ ) {
             if (subject.polygons[i].visible) {
             const polygon = subject.polygons[i];
@@ -113,10 +121,24 @@ window.onload = function() {
                 x : graph3D.xs(subject.points[polygon.points[3]]), 
                 y : graph3D.ys(subject.points[polygon.points[3]])};
                 let {r, g, b } = polygon.color;
-                const lumen = graph3D.calcIllumination(polygon.lumen, LIGHT.lumen);
-                r = Math.round(r * lumen);
-                g = Math.round(g * lumen);
-                b = Math.round(b * lumen);
+
+                //const lumen = graph3D.calcIllumination(polygon.lumen, LIGHT.lumen);
+                const lumen = [];
+                LIGHTS.forEach(LIGHT => {
+                    for (let i = 0; i < polygon.lumen.length; i++) {
+                    lumen[i] = graph3D.calcIllumination(polygon.lumen[i], LIGHT.lumen);
+                    }
+                })
+                let lum = 0;//min поиск максимального освещения полигона
+                
+                for(let i = 0; i < lumen.length; i++) {
+                    if (lum < lumen[i]) {
+                        lum = lumen[i];
+                    }
+                }
+                r = Math.round(r * lum);
+                g = Math.round(g * lum);
+                b = Math.round(b * lum);
                 canvas.polygon([point1, point2, point3, point4], polygon.rgbToHex(r, g, b));
             }
             
@@ -146,7 +168,8 @@ window.onload = function() {
 
         canvas.clear();
         SCENE.forEach(subject => printSubject(subject));
-        canvas.text(canvas.sx(15), canvas.sy(25), FPSout);
+        canvas.text(canvas.sx(15), canvas.sy(25), 'FPS:');
+        canvas.text(canvas.sx(65), canvas.sy(25), FPSout);
     }
 
     let FPS = 0;

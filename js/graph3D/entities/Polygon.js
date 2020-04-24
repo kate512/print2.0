@@ -2,8 +2,8 @@ class Polygon {
     constructor(points = [], color = '#FF0000') {
         this.points = points;
         this.color = this.hexToRgb(color);
-        this.distance = 0;//расстояние до полигона
-        this.lumen = 1;//освещенность полигона [0..1]
+        this.distance = [0];//расстояние до полигона
+        this.lumen = [1];//освещенность полигона [0..1]
         this.visible = true;//видин или нет
     }
 
