@@ -1,16 +1,16 @@
-Surfaces.prototype.bublik = ( R = 20,  count = 10) => {
+Surfaces.prototype.bublik = ( R = 20,  count = 10, point = new Point(0, 0, 0), color = '#ffffff', animation = null ) => {
     let points = [];
     const points1 = [];
     const points2 = [];
     const edges = [];
     const polygons = [];
-    const r = R / 2;
+    const r = R - R / 4;
     const fi = 2 * Math.PI / count;
     //points
     for(let i = 0; i < count; i++){
         let t = fi * i;
-        points1[i] = new Point(R*Math.cos(t), R*Math.sin(t)); 
-        points2[i] = new Point(r*Math.cos(t), r*Math.sin(t)); 
+        points1[i] = new Point(point.x + R*Math.cos(t), point.y + R*Math.sin(t)); 
+        points2[i] = new Point(point.x + r*Math.cos(t), point.y + r*Math.sin(t)); 
     }
     points = points1.concat(points2);
     //ребра соединяем
@@ -39,15 +39,15 @@ Surfaces.prototype.bublik = ( R = 20,  count = 10) => {
     for (let i = 0; i < count - 1; i ++) {
         j ++;
         if (i % 2 == 0){
-            polygons.push(new Polygon([i, i + 1, j + 1, j], '#ffc0cb'));//pink
+            polygons.push(new Polygon([i, i + 1, j + 1, j], color));//pink
         }else{
-            polygons.push(new Polygon([i, i + 1, j + 1, j], '#ffff00'));//yellow
+            polygons.push(new Polygon([i, i + 1, j + 1, j], color));//yellow
         }
     }
     if (i % 2 == 0){
-        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], '#ffc0cb'))//pink
+        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], color))//pink
     }else{
-        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], '#ffff00'))//yellow
+        polygons.push(new Polygon([0, count - 1, 2 * count - 1,  count], color))//yellow
     }
-    return new Subject(points, edges, polygons);
+    return new Subject(points, edges, polygons, animation);
 }
