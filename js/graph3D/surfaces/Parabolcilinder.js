@@ -1,20 +1,20 @@
-Surfaces.prototype.hyperparaboloid = (count = 20) => {
+Surfaces.prototype.parabolcilinder = (count = 40) => {
     const points = [];
     const polygons = [];
     const edges = [];
-    //z = x^2 - y^2
+    //z = x^2 /2
     //точки
-    const size = 10;
+    const size = 20;
     const delta = size / count;
     for (let i = 0; i < count; i++) {
         for (let j = 0; j < count; j++) {
             const x = i * delta - size / 2;
-            const y = j * delta - size / 2;
-            const z = x * x / 5 - y * y / 5;
+            const z = j * delta;
+            let y = x * x / 5;
             points.push(new Point(x, y, z));
         }
     }
-    
+
     for (let i = 0; i < points.length; i++) {
         //ребра по вертикали
         if (i + 1 < points.length && (i + 1) % count != 0) {
@@ -30,8 +30,8 @@ Surfaces.prototype.hyperparaboloid = (count = 20) => {
         }
     }
 
-    
-    
-    
+
+
+
     return new Subject(points, edges, polygons);
 }
