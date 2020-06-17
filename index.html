@@ -3,6 +3,7 @@
         <title> Графики 3D </title>
         <meta charset="utf-8" />
         <link href='css/style.css' rel='stylesheet'>
+
         <script src="js/graph3D/entities/Point.js"></script>
         <script src="js/graph3D/entities/Edge.js"></script>
         <script src='js/graph3D/entities/Polygon.js'></script>
@@ -12,9 +13,16 @@
         <script src="js/graph3D/surfaces/Surfaces.js"></script>
         <script src="js/graph3D/surfaces/Cube.js"></script>
         <script src="js/graph3D/surfaces/Bublik.js"></script>
-        <script src="js/graph3D/surfaces/Sphere.js"></script>
+        <script src="js/graph3D/surfaces/Sphera.js"></script>
         <script src="js/graph3D/surfaces/Ellipsoid.js"></script>
         <script src="js/graph3D/surfaces/Hyperparaboloid.js"></script>
+        <script src="js/graph3D/surfaces/Hypercilinder.js"></script>
+        <script src="js/graph3D/surfaces/Parabolcilinder.js"></script>
+        <script src="js/graph3D/surfaces/Ellipcilinder.js"></script>
+        <script src="js/graph3D/surfaces/Onepolhyper.js"></script>
+        <script src="js/graph3D/surfaces/Twopolhyper.js"></script>
+        <script src="js/graph3D/surfaces/Cone.js"></script>
+        <script src="js/graph3D/surfaces/Ellipticparaboloid.js"></script>
 
         <script src="js/graph3D/Graph3D.js"></script>
         <script src="js/graph3D/Math3D.js"></script>
@@ -23,15 +31,46 @@
         <script src="js/main.js"></script>
     </head>
 <body>
-    <div>
+        <canvas id="canvas"></canvas>
+    <div class="check">
         <label><input type='checkbox' id="printPoints"/>Рисовать точки</label>
         <br>
         <label><input type='checkbox' id="printEdges"/>Рисовать ребра</label>
         <br>
+        <label><input type='checkbox' id="randomColor"/>Random фона</label>
+        <br>
         <label><input type='checkbox' id="printPolygons" checked/>Рисовать полигоны</label>
         <br>
+        <label><input type='radio' name = 'subject' id="spheraRand" />Разноцветная сфера</label> 
+        <br>
+        <label><input type='radio' name = 'subject' id="sunsistem" />Солнечная система</label>
+        
+        <br>
+        <br>
+        Остальные фигуры:
+        <br>
+        <label><input type='radio' name = 'subject' id="hypercilinder" />гиперболический цилиндр</label>
+        <br>
+        <label><input type='radio' name = 'subject' id="parabolcilinder" />параболический цилиндр</label>
+        <br>
+        <label><input type='radio' name = 'subject' id="ellipcilinder" />эллиптический цилиндр</label> 
+
+        <br>
+        <label><input type='radio' name = 'subject' id="onepolhyper" />однополостный гиперболоид</label> 
+        <br>
+        <label><input type='radio' name = 'subject' id="twopolhyper" />двухполостный гиперболоид</label> 
+
+        <br>
+        <label><input type='radio' name = 'subject' id="ellipsoid" />эллипсоид</label> 
+        <br>
+        <label><input type='radio' name = 'subject' id="cone" />конус</label> 
+        <br>
+        <label><input type='radio' name = 'subject' id="sphera" />сфера</label> 
+
+        <br>
+        <label><input type='radio' name = 'subject' id="ellipticparaboloid" />эллиптический параболоид</label>
+        <br>
+        <label><input type='radio' name = 'subject' id="hyperparaboloid" />гиперболический параболоид(седло)</label>        
     </div>
-    <div>
-        <canvas id="canvas"></canvas>
-    </div>
+   
 </body>
