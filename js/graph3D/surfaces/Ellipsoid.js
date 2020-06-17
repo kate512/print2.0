@@ -1,8 +1,9 @@
-Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 30, count = 20) => {
+    //эллипсоид
+Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 15, count = 20) => {
     const points = [];
     const edges = [];
     const polygons = [];
-    //points
+    //точки
     const fi = 2 * Math.PI / count;
     let ty = Math.PI * 2;  
     for(let j = 0; j < ty; j += fi){
@@ -14,7 +15,6 @@ Surfaces.prototype.ellipsoid = (ax = 1, ay = 1.5, az = 1, R = 30, count = 20) =>
     }
 
     //ребра
-    //ребра соединяем
     //вертикальные линии
     for(let i = 0; i < points.length - count; i++){
         edges[i] = new Edge(i, i + count); 
